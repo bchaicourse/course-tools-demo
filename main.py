@@ -12,8 +12,6 @@ load_dotenv()
 
 app = FastAPI()
 
-# Mount the static directory
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Configure CORS
 app.add_middleware(
@@ -37,7 +35,7 @@ class QueryRequest(BaseModel):
 class QueryResponse(BaseModel):
     response: str
 
-# Endpoint to interact with OpenAI API via LangChain
+
 @app.post("/query", response_model=QueryResponse)
 async def query_openai(request: QueryRequest):
     print(request.prompt)
@@ -64,7 +62,20 @@ async def query_openai(request: QueryRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# ----------- React App ------------
 # Root endpoint
 @app.get("/")
 async def read_root():
-    return FileResponse('static/index.html')
+    return FileResponse('static/client/build/index.html')
+
+# Mount the static directory
+app.mount("/", StaticFiles(directory="static/client/build"), name="static")
+
+# ----------- Vanila HTML ------------
+# # Root endpoint
+# @app.get("/")
+# async def read_root():
+#     return FileResponse('static/index.html')
+
+# # Mount the static directory
+# app.mount("static", StaticFiles(directory="static"), name="static")
