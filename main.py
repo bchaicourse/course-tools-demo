@@ -62,20 +62,11 @@ async def query_openai(request: QueryRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# ----------- React App ------------
+
 # Root endpoint
 @app.get("/")
 async def read_root():
-    return FileResponse('static/client/build/index.html')
+    return FileResponse('static/index.html')
 
 # Mount the static directory
-app.mount("/", StaticFiles(directory="static/client/build"), name="static")
-
-# ----------- Vanila HTML ------------
-# # Root endpoint
-# @app.get("/")
-# async def read_root():
-#     return FileResponse('static/index.html')
-
-# # Mount the static directory
-# app.mount("static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
